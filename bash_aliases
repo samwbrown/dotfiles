@@ -1,27 +1,13 @@
-# Use ctrl arrows to navigate "partial" history
-#bind '"\e[1;5A":history-search-backward'
-#bind '"\e[1;5B":history-search-forward'
-bind '"\e[1;5C":forward-word'
-bind '"\e[1;5D":backward-word'
 
-# Like ls but also with numeric (octal) permissions
-alias lll='stat -c "%A (%a)  %G  %U   %n"'
+# enable color support of commands
+alias ls='ls --color=auto'
 
-# Sync master with origin
-alias gitsync='git fetch origin master:master'
+alias diff='diff --color=auto'
 
-alias lock='sleep 1; xset dpms force off'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
-alias ks='echo common typo'
-alias c='echo common typo'
 
-# Delete those pesky .orig files git makes
-#alias gitcleaner="find . -type f -name '*.orig' -exec rm -vf {} ';'"
-
-# Like above but send to system trash instead of delete forever
-alias gitcleaner="find . -type f -name '*.orig' -exec trash-put {} ';' -exec echo trashed {} ';'"
-
-alias pipog='pip'
-alias pip='uv pip'
-alias pip3='uv pip'
-alias emacs="emacs -nw"
+# muscle memory for pip
+alias pip="uv pip"

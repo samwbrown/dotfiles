@@ -1,5 +1,10 @@
-ln -s `realpath ./vimrc` ~/.vimrc
-ln -s `realpath ./bashrc` ~/.bashrc
-ln -s `realpath ./bash_aliases` ~/.bash_aliases
-ln -s `realpath ./Xmodmap` ~/.Xmodmap
-ln -s `realpath ./emacs` ~/.emacs.
+#!/bin/bash
+
+function setup () { 
+    ln -nfs $(realpath $1) ~/.$1
+}
+
+setup vimrc
+setup bashrc
+setup bash_aliases
+setup emacs.d

@@ -1,0 +1,104 @@
+(defcfg
+;; You can set the value below to no if you only use the keys defined in defsrc.
+  process-unmapped-keys yes
+)
+
+(defsrc
+  q w e r t y u i o p
+  a s d f g h j k l ;
+  z x c v b n m , . /
+         spc
+)
+
+(defvar
+  streak-count 3
+  streak-time 325
+  tap-timeout 200
+  hold-timeout 300
+  chord-timeout 50
+)
+
+(deftemplate flowtap (flow tap)
+  (switch 
+    ((key-timing $streak-count less-than $streak-time)) $flow break
+    () $tap break
+  )
+)
+
+(deftemplate charmod (char mod)
+  (t! flowtap
+    $char
+    (tap-hold-release-timeout $tap-timeout $hold-timeout $char $mod $mod reset-timeout-on-press)
+  )
+)
+
+(defvirtualkeys
+  clear (layer-switch main)
+)
+
+(defalias
+  cwd (chord cw d)
+  cwk (chord cw k)
+)
+
+(defchords cw 100
+  (d      ) d
+  (   k   ) k
+  (d  k   ) (caps-word 2000)
+)
+
+
+(deflayermap (main)
+  caps esc
+  
+  a (t! charmod a lmet)
+  s (t! charmod s lalt)
+  d (t! charmod @cwd lsft)
+  f (t! charmod f lctl)
+  j (t! charmod j rctl)
+  k (t! charmod @cwk rsft)
+  l (t! charmod l lalt)
+  ; (t! charmod ; rmet)
+  z (t! charmod z lctl) 
+  / (t! charmod / rctl)
+;;  spc (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
+
+)
+
+(deflayermap (game)
+  caps esc
+  w w
+  a a
+  s s
+  d d
+  l l
+  spc spc
+
+)
+
+(deflayermap (extend)
+  y ins
+  u home
+  i up
+  o end
+  p pgup
+  a lmet
+  s lalt
+  d lsft
+  f lctl
+  g comp
+  h esc
+  j left
+  k down
+  l rght
+  ; pgdn
+  z mute
+  x vold
+  c volu
+  v pp
+  n tab
+  m bspc
+  , spc
+  . del
+  / ret
+)

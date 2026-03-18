@@ -12,6 +12,10 @@
       `((".*" ,temporary-file-directory t)))
 
 
+;; map escape key to c-g... see how it goes
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+
 ;; which key!
 (which-key-mode 1)
 

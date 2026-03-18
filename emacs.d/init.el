@@ -13,7 +13,13 @@
 
 
 ;; map escape key to c-g... see how it goes
-(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+;;; esc always quits
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'keyboard-quit)
 
 
 ;; which key!

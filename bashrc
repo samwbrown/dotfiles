@@ -116,23 +116,28 @@ fi
 
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 
-# SAM: Add local executables to path
+# Add local executables to path
 PATH=$PATH:~/.local/bin
-
-
-# Homebrew config
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# prefer coreutils find
-PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
-
-# do not auto update homebrew every command
-export HOMEBREW_NO_INSTALL_CLEANUP=1
-export HOMEBREW_NO_AUTO_UPDATE=1
-
-# Stop terminal from announcing zsh exists
-export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # ignore case when tab completing
 bind -s 'set completion-ignore-case on'
 
+
+# os specific stuff..
+if [[ "OSTYPE" == "darwin"* ]]; then
+
+    # Homebrew config
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+
+    # prefer coreutils find
+    PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
+
+    # do not auto update homebrew every command
+    export HOMEBREW_NO_INSTALL_CLEANUP=1
+    export HOMEBREW_NO_AUTO_UPDATE=1
+
+    # Stop terminal from announcing zsh exists
+    export BASH_SILENCE_DEPRECATION_WARNING=1
+
+
+fi

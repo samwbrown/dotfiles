@@ -4,10 +4,10 @@
 )
 
 (defsrc
-  q w e r t y u i o p
+  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  caps
   a s d f g h j k l ;
-  z x c v b n m , . /
-         spc
+  fn
 )
 
 (defvar
@@ -32,19 +32,15 @@
   )
 )
 
-(defvirtualkeys
-  clear (layer-switch main)
-)
-
 (defalias
   cwd (chord cw d)
   cwk (chord cw k)
 )
 
-(defchords cw 100
+(defchords cw 500
   (d      ) d
   (   k   ) k
-  (d  k   ) (caps-word 2000)
+  (d  k   ) (caps-word 5000)
 )
 
 
@@ -61,7 +57,7 @@
   ; (t! charmod ; rmet)
   z (t! charmod z lctl) 
   / (t! charmod / rctl)
-;;  spc (t! charmod spc (multi (layer-switch extend) (on-release tap-virtualkey clear)))
+  fn @fnl
 
 )
 
@@ -76,29 +72,14 @@
 
 )
 
-(deflayermap (extend)
-  y ins
-  u home
-  i up
-  o end
-  p pgup
-  a lmet
-  s lalt
-  d lsft
-  f lctl
-  g comp
-  h esc
-  j left
-  k down
-  l rght
-  ; pgdn
-  z mute
-  x vold
-  c volu
-  v pp
-  n tab
-  m bspc
-  , spc
-  . del
-  / ret
+(deflayermap fn
+  f1 brdn
+  f2 brup
+  f10 mute
+  f11 vold
+  f12 volu
+)
+
+(defalias
+  fnl (layer-while-held fn)
 )

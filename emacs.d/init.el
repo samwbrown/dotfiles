@@ -31,6 +31,25 @@
 ;;(set-default-font "Menlo 10")
 (set-face-attribute 'default nil :height 130)
 
+;;;;;;;;;;;;;;;;;;
+;; speedbar (see system crafters)
+(customize-set-variable 'speedbar-update-flag t)
+
+;; Disable icon images, instead use text
+(customize-set-variable 'speedbar-use-images nil)
+
+;; Customize Speedbar Frame
+(customize-set-variable 'speedbar-frame-parameters
+                        '((name . "speedbar")
+                          (title . "speedbar")
+                          (minibuffer . nil)
+                          (border-width . 2)
+                          (menu-bar-lines . 0)
+                          (tool-bar-lines . 0)
+                          (unsplittable . t)
+                          (left-fringe . 10)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; behaviour
 
@@ -52,7 +71,6 @@
 ;; allow type y / n
 (setq use-short-answers t)
 
-
 ;; map escape key to c-g... see how it goes
 ;;; esc always quits
 (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
@@ -62,29 +80,23 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 (global-set-key [escape] 'keyboard-quit)
 
-
 ;; which key!
 ;; n.b. less useful than I thought
 ;; (which-key-mode 1)
-
 
 ;; recent files!
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
-
 
 ;; Update buffers when the underlying file has changed
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 
-
 ;; eglot
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
 	       '(lua-mode .( "/opt/homebrew/bin/lua-language-server"))))
-
 
 ;;;;;;;;;;;;;;;;;;;
 ;; external packages
@@ -99,7 +111,6 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
-
 ;; lua-mode
 (use-package lua-mode
   :defer t
@@ -110,14 +121,11 @@
   (lua-indent-level 4 "Make lua tab indent sane")
   )
 
-
-
 ;; catppuccin theme
 (use-package catppuccin-theme
   :custom
   (catppuccin-flavor 'macchiato)
   )
-
 
 ;; auto dark
 (use-package auto-dark
@@ -128,14 +136,11 @@
   (auto-dark-mode 1)
   )
 	   
-
-
 ;; vertico (command completion)
 (use-package vertico
   :config
   (vertico-mode 1)
   )
-
 
 ;; orderless (search mod)
 (use-package orderless
@@ -145,9 +150,17 @@
 
 ;; consult (completion for everything else)
 (use-package consult
+  :config
+  (global-set-key "\C-x\ \C-r" 'consult-recent-file)
   :custom
-  (completion-in-region-function #'consult-completion-in-region))
+  (completion-in-region-function #'consult-completion-in-region)
+  )
 
+;; marginalia
+(use-package marginalia
+  :config
+  (marginalia-mode 1)
+  )
 
 (use-package kanata-kbd-mode
   :vc

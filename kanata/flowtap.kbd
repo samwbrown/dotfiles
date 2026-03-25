@@ -1,0 +1,42 @@
+
+
+(defvar
+  streak-count 3
+  streak-time 325
+  tap-timeout 200
+  hold-timeout 300
+  chord-timeout 50
+)
+
+(deftemplate flowtap (flow tap)
+  (switch 
+    ((key-timing $streak-count less-than $streak-time)) $flow break
+    () $tap break
+  )
+)
+
+(deftemplate charmod (char mod)
+  (t! flowtap
+    $char
+    (tap-hold-release-timeout $tap-timeout $hold-timeout $char $mod $mod reset-timeout-on-press)
+  )
+)
+
+
+(deflayermap (main)
+  caps esc
+  
+  a (t! charmod @a lmet)
+  s (t! charmod @s lalt)
+  d (t! charmod @d lsft)
+  f (t! charmod @f lctl)
+
+  j (t! charmod @j rctl)
+  k (t! charmod @k rsft)
+  l (t! charmod @l lalt)
+  ; (t! charmod @; rmet)
+
+  fn @fnl
+)
+
+(include common.kbd)

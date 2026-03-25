@@ -124,13 +124,13 @@ bind -s 'set completion-ignore-case on'
 
 
 # os specific stuff..
-if [[ "OSTYPE" == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Homebrew config
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
-    # prefer coreutils find
-    PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
+    # prefer coreutils 
+    PATH="/opt/homebrew/opt/findutils/libexec/gnubin:/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 
     # do not auto update homebrew every command
     export HOMEBREW_NO_INSTALL_CLEANUP=1
@@ -141,3 +141,4 @@ if [[ "OSTYPE" == "darwin"* ]]; then
 
 
 fi
+. "$HOME/.cargo/env"

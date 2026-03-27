@@ -21,8 +21,9 @@
 (customize-set-variable 'menu-bar-mode nil)
 (customize-set-variable 'tool-bar-mode nil)
 
-;; Remove scroll bars
-(customize-set-variable 'set-scroll-bar-mode nil)
+;; disable scrollbars
+(customize-set-variable 'scroll-bar-mode nil)
+(customize-set-variable 'horizontal-scroll-bar-mode nil)
 
 ;; don't let the buffer line spacing be stretched
 (setq x-stretch-cursor nil)
@@ -121,20 +122,18 @@
   (lua-indent-level 4 "Make lua tab indent sane")
   )
 
-;; catppuccin theme
-(use-package catppuccin-theme
-  :custom
-  (catppuccin-flavor 'macchiato)
-  )
 
 ;; auto dark
 (use-package auto-dark
   :if (eq system-type 'darwin) ;; only on macos
   :custom
-  (auto-dark-themes '((catppuccin) (modus-operandi-tinted)))
+  (auto-dark-themes '((modus-vivendi-tinted) (modus-operandi-tinted)))
   :config
   (auto-dark-mode 1)
   )
+
+;; magit
+(use-package magit)
 	   
 ;; vertico (command completion)
 (use-package vertico
@@ -152,6 +151,8 @@
 (use-package consult
   :config
   (global-set-key "\C-x\ \C-r" 'consult-recent-file)
+  (global-set-key "\C-s" 'consult-line)
+;;  (global-set-key "\C-r" 'consult-history)
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   )

@@ -4,18 +4,19 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; local settings (no vc)
+(setq local-file (concat user-emacs-directory "local.el"))
+(when (file-exists-p local-file)
+  (load local-file))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI
 
+;; line numbers in all prog mode descendents
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
-;; line numbers everywhere
-(global-display-line-numbers-mode 1)
-
-
-; Remove the splash screen
+;; Remove the splash screen
 (setq inhibit-splash-screen t)
-
 
 ;; Remove menu bar and toolbar
 (customize-set-variable 'menu-bar-mode nil)
@@ -28,35 +29,38 @@
 ;; don't let the buffer line spacing be stretched
 (setq x-stretch-cursor nil)
 
-;; try different font
-;;(set-default-font "Menlo 10")
-(set-face-attribute 'default nil :height 130)
+;; highlight current line
+(global-hl-line-mode 1)
 
-;;;;;;;;;;;;;;;;;;
-;; speedbar (see system crafters)
-(customize-set-variable 'speedbar-update-flag t)
+;; cursor is bar not block
+(customize-set-variable 'cursor-type '(bar . 0))
 
-;; Disable icon images, instead use text
-(customize-set-variable 'speedbar-use-images nil)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; misc keys
 
-;; Customize Speedbar Frame
-(customize-set-variable 'speedbar-frame-parameters
-                        '((name . "speedbar")
-                          (title . "speedbar")
-                          (minibuffer . nil)
-                          (border-width . 2)
-                          (menu-bar-lines . 0)
-                          (tool-bar-lines . 0)
-                          (unsplittable . t)
-                          (left-fringe . 10)))
+;; eval
+(global-set-key "\C-\M-R" 'eval-region)
+(global-set-key "\C-\M-B" 'eval-buffer)
 
+;; font size adjust
+(keymap-global-set "C-+" 'text-scale-adjust)
+
+;; map escape key to c-g... see how it goes
+;; esc always quits
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(global-set-key [escape] 'keyboard-quit)
+
+;; window size
+(keymap-global-set "C-{" 'shrink-window-horizontally)
+(keymap-global-set "C-}" 'enlarge-window-horizontally)
+(keymap-global-set "C-^" 'enlarge-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; behaviour
-
-;; eval keys
-(global-set-key "\C-\M-R" 'eval-region)
-(global-set-key "\C-\M-B" 'eval-buffer)
 
 ;; Redirect backup files to temp dir
 (setq backup-directory-alist
@@ -72,18 +76,9 @@
 ;; allow type y / n
 (setq use-short-answers t)
 
-;; map escape key to c-g... see how it goes
-;;; esc always quits
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(global-set-key [escape] 'keyboard-quit)
-
 ;; which key!
 ;; n.b. less useful than I thought
-;; (which-key-mode 1)
+(which-key-mode 1)
 
 ;; recent files!
 (recentf-mode 1)
@@ -94,10 +89,30 @@
 (global-auto-revert-mode 1)
 (setq global-auto-revert-non-file-buffers t)
 
+;; restore files from previous session
+;; note this is very slow
+;;(desktop-save-mode 1)
+
+;; restore point from last visit
+(save-place-mode 1)
+
 ;; eglot
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
 	       '(lua-mode .( "/opt/homebrew/bin/lua-language-server"))))
+
+;; eww
+(customize-set-value 'eww-search-prefix "https://kagi.com/search?token=z6gpEkPMQnUbg0JwIia2YhcZE4dxYfRUIBgrnxdDJvk.dBxyH2fxnyMU-iuzkTKJAn9HyrQSifS1GViGlf33QGI&q=%s")
+
+;;;;;;;;;;;;;;;;;;;
+;; org mode
+
+(defun my-update-org-files()
+  (interactive)
+  (customize-set-value 'org-agenda-files
+    (split-string (shell-command-to-string
+		  (concat "cd " org-directory " && find -name '*.org' ! -wholename './Archive*'"))
+		  "\n")))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; external packages
@@ -106,7 +121,6 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-
 
 ;; make all packages auto-install
 (require 'use-package-ensure)
@@ -119,18 +133,15 @@
   :hook
   (lua-mode . eglot-ensure)
   :custom
-  (lua-indent-level 4 "Make lua tab indent sane")
-  )
-
+  (lua-indent-level 4 "Make lua tab indent sane"))
 
 ;; auto dark
 (use-package auto-dark
-  :if (eq system-type 'darwin) ;; only on macos
+;;  :if (eq system-type 'darwin) ;; only on macos
   :custom
   (auto-dark-themes '((modus-vivendi-tinted) (modus-operandi-tinted)))
   :config
-  (auto-dark-mode 1)
-  )
+  (auto-dark-mode 1))
 
 ;; magit
 (use-package magit)
@@ -138,14 +149,12 @@
 ;; vertico (command completion)
 (use-package vertico
   :config
-  (vertico-mode 1)
-  )
+  (vertico-mode 1))
 
 ;; orderless (search mod)
 (use-package orderless
   :custom
-  (completion-styles '(orderless))
-  )
+  (completion-styles '(orderless)))
 
 ;; consult (completion for everything else)
 (use-package consult
@@ -154,17 +163,29 @@
   (global-set-key "\C-s" 'consult-line)
 ;;  (global-set-key "\C-r" 'consult-history)
   :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  )
+  (completion-in-region-function #'consult-completion-in-region))
 
 ;; marginalia
 (use-package marginalia
   :config
-  (marginalia-mode 1)
-  )
+  (marginalia-mode 1))
 
 (use-package kanata-kbd-mode
   :vc
   (:url "https://github.com/chmouel/kanata-kbd-mode/" :rev 0315b56)
   :mode
   ("\\.kbd\\'" . kanata-kbd-mode))
+
+(use-package exec-path-from-shell
+  :if (eq system-type 'darwin) ;; only on macos
+  :init
+  (exec-path-from-shell-initialize))
+
+(use-package mixed-pitch
+  :hook
+  (text-mode . mixed-pitch-mode))
+
+;; expand-region!
+(use-package expand-region
+  :config
+  (global-set-key (kbd "C-;") 'er/expand-region)) ;

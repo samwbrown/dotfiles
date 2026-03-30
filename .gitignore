@@ -1,13 +1,3 @@
 
 # emacs things
-emacs.d/eln-cache
-emacs.d/elpa
-emacs.d/games
-emacs.d/recentf
-emacs.d/todo
-emacs.d/tramp
-emacs.d/transient
-emacs.d/tutorial
-/emacs.d/auto-save-list/
-/emacs.d/projects
-/emacs.d/url/
+emacs.d/*

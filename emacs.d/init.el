@@ -33,7 +33,7 @@
 (global-hl-line-mode 1)
 
 ;; cursor is bar not block
-(customize-set-variable 'cursor-type '(bar . 0))
+;; (customize-set-variable 'cursor-type '(bar . 0))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; misc keys
@@ -107,12 +107,12 @@
 ;;;;;;;;;;;;;;;;;;;
 ;; org mode
 
+(setq org-agenda-files (concat org-directory "/.org_files"))
+
 (defun my-update-org-files()
   (interactive)
-  (customize-set-value 'org-agenda-files
-    (split-string (shell-command-to-string
-		  (concat "cd " org-directory " && find -name '*.org' ! -wholename './Archive*'"))
-		  "\n")))
+  (shell-command (concat
+     "cd " org-directory " && find -name '*.org' ! -wholename './Archive*'  > .org_files")))
 
 ;;;;;;;;;;;;;;;;;;;
 ;; external packages
@@ -181,9 +181,9 @@
   :init
   (exec-path-from-shell-initialize))
 
-(use-package mixed-pitch
-  :hook
-  (text-mode . mixed-pitch-mode))
+;; (use-package mixed-pitch
+;;   :hook
+;;   (text-mode . mixed-pitch-mode))
 
 ;; expand-region!
 (use-package expand-region
